@@ -9,9 +9,7 @@ namespace Infraestructure.DependencyInjection
 {
     public static class InfrastructureExtensions
     {
-        public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));

@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Domain.Entities.Generics;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Domain.Entities
 {
-    public class GrammarSection
+    public class GrammarSection : BaseEntity
     {
-        public Guid Id { get; private set; }
+        protected GrammarSection() { }
 
         public static GrammarSection Create()
         {
             return new GrammarSection
             {
-                Id = Guid.NewGuid()
             };
         }
     }

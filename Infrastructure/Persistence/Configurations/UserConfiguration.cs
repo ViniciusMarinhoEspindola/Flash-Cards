@@ -14,9 +14,9 @@ namespace Infraestructure.Persistence.Configurations
             builder.Property(u => u.PasswordHash).IsRequired();
             builder.HasIndex(u => u.Email).IsUnique();
 
-            builder.HasMany(u => u.Languages)
-                   .WithOne(l => l.User)
-                   .HasForeignKey(l => l.UserId)
+            builder.HasMany(u => u.UserLanguages)
+                   .WithOne(ul => ul.User)
+                   .HasForeignKey(ul => ul.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }
