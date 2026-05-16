@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middlewares;
 using Infraestructure.DependencyInjection;
 using Scalar.AspNetCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
