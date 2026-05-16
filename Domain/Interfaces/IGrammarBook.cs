@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Interfaces
 {
-    public interface ILanguageRepository
+    public interface IGrammarBook
     {
     }
 }

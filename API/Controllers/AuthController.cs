@@ -12,11 +12,10 @@ namespace API.Controllers
         private Guid CurrentUserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken ct)
+        public async Task<IActionResult> CheckAuth(CancellationToken ct)
         {
-            var result = await _authService.GetByUserAsync(CurrentUserId, ct);
-            return result.ToActionResult(this);
+            var result = await _authService.CheckAuthenticationAsync(CurrentUserId, ct);
+            return Ok(result);
         }
-
     }
 }

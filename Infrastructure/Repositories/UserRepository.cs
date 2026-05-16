@@ -1,20 +1,31 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Infraestructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(DBContext _db) : IUser
     {
-        public async Task<List<User>> GetByUserId(Guid userId)
+        public async Task<User?> GetByIdAsync(Guid id, CancellationToken ct = default)
+            => await _db.Users.FirstOrDefaultAsync(u => u.Id == id, ct);
+
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+            => await _db.Users.FirstOrDefaultAsync(u => u.Email == email.ToLowerInvariant().Trim(), ct);
+
+        public async Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default)
+            => await _db.Users.AnyAsync(u => u.Email == email.ToLowerInvariant().Trim(), ct);
+
+        public async Task AddAsync(User user, CancellationToken ct = default)
         {
-            await Task.Delay(100); 
-            return new List<User>
-            {
-                User.Create("Sample@email.com", "SampleUser", "teste")
-            };
+            await _db.Users.AddAsync(user, ct);
+            await _db.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateAsync(User user, CancellationToken ct = default)
+        {
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync(ct);
         }
     }
 }

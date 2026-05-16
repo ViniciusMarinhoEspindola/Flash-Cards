@@ -1,16 +1,19 @@
-﻿using Application.Common;
+using Application.Common;
 using Domain.Entities;
 using Domain.Interfaces;
 
 namespace Application.Features.Users.Services
 {
-    public class AuthService(IUserRepository _userRepository)
+    public class AuthService(IUser _user)
     {
-        public async Task<Result<IEnumerable<User>>> GetByUserAsync(Guid userId, CancellationToken ct = default)
+        public async Task<string> CheckAuthenticationAsync(Guid userId, CancellationToken ct = default)
         {
-            var response = await _userRepository.GetByUserId(userId);
+            var user = await _user.GetByIdAsync(userId, ct);
 
-            return Result<IEnumerable<User>>.Ok(response);
+            if (user is null)
+                return "Authentication failed";
+
+            return await Task.Run(() => "Authentication successful");
         }
     }
 }

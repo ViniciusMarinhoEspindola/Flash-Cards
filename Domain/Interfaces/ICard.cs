@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface ICard
     {
-        Task<List<User>> GetByUserId(Guid userId);
     }
 }

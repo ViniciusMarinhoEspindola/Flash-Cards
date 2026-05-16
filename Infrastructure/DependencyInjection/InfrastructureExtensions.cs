@@ -14,7 +14,15 @@ namespace Infraestructure.DependencyInjection
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUser, UserRepository>();
+            services.AddScoped<ILanguage, LanguageRepository>();
+            services.AddScoped<IUserLanguage, UserLanguageRepository>();
+            services.AddScoped<ICard, CardRepository>();
+            services.AddScoped<ICardExample, CardExampleRepository>();
+            services.AddScoped<ICardProgress, CardProgressRepository>();
+            services.AddScoped<IGrammarBook, GrammarBookRepository>();
+            services.AddScoped<IGrammarChapter, GrammarChapterRepository>();
+            services.AddScoped<IGrammarSection, GrammarSectionRepository>();
 
             return services;
         }
