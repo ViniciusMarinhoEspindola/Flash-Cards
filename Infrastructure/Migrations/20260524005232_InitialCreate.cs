@@ -48,33 +48,34 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLanguage",
+                name: "Workspaces",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NativeLanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    LanguageId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    NativeLanguageId = table.Column<Guid>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLanguage", x => x.Id);
+                    table.PrimaryKey("PK_Workspaces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserLanguage_Languages_LanguageId",
+                        name: "FK_Workspaces_Languages_LanguageId",
                         column: x => x.LanguageId,
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserLanguage_Languages_NativeLanguageId",
+                        name: "FK_Workspaces_Languages_NativeLanguageId",
                         column: x => x.NativeLanguageId,
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserLanguage_Users_UserId",
+                        name: "FK_Workspaces_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -82,13 +83,34 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Card",
+                name: "Decks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserLanguageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WorkspaceId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Decks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Decks_Workspaces_WorkspaceId",
+                        column: x => x.WorkspaceId,
+                        principalTable: "Workspaces",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DeckId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Term = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    Translation = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Definition = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
                     Romanization = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     IsPhrase = table.Column<bool>(type: "INTEGER", nullable: false),
                     Source = table.Column<int>(type: "INTEGER", nullable: false),
@@ -97,39 +119,39 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Card", x => x.Id);
+                    table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Card_UserLanguage_UserLanguageId",
-                        column: x => x.UserLanguageId,
-                        principalTable: "UserLanguage",
+                        name: "FK_Cards_Decks_DeckId",
+                        column: x => x.DeckId,
+                        principalTable: "Decks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardExample",
+                name: "CardExamples",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CardId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Sentence = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    Translation = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Sentence = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
+                    Note = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardExample", x => x.Id);
+                    table.PrimaryKey("PK_CardExamples", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CardExample_Card_CardId",
+                        name: "FK_CardExamples_Cards_CardId",
                         column: x => x.CardId,
-                        principalTable: "Card",
+                        principalTable: "Cards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardProgress",
+                name: "CardProgresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -146,15 +168,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardProgress", x => x.Id);
+                    table.PrimaryKey("PK_CardProgresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CardProgress_Card_CardId",
+                        name: "FK_CardProgresses_Cards_CardId",
                         column: x => x.CardId,
-                        principalTable: "Card",
+                        principalTable: "Cards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CardProgress_Users_UserId",
+                        name: "FK_CardProgresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -179,30 +201,35 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_UserLanguageId",
-                table: "Card",
-                column: "UserLanguageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CardExample_CardId",
-                table: "CardExample",
+                name: "IX_CardExamples_CardId",
+                table: "CardExamples",
                 column: "CardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardProgress_CardId",
-                table: "CardProgress",
+                name: "IX_CardProgresses_CardId",
+                table: "CardProgresses",
                 column: "CardId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardProgress_UserId",
-                table: "CardProgress",
+                name: "IX_CardProgresses_UserId",
+                table: "CardProgresses",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardProgress_UserId_NextReview",
-                table: "CardProgress",
+                name: "IX_CardProgresses_UserId_NextReview",
+                table: "CardProgresses",
                 columns: new[] { "UserId", "NextReview" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_DeckId",
+                table: "Cards",
+                column: "DeckId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decks_WorkspaceId",
+                table: "Decks",
+                column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Languages_Code",
@@ -211,25 +238,25 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLanguage_LanguageId",
-                table: "UserLanguage",
-                column: "LanguageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLanguage_NativeLanguageId",
-                table: "UserLanguage",
-                column: "NativeLanguageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLanguage_UserId_LanguageId",
-                table: "UserLanguage",
-                columns: new[] { "UserId", "LanguageId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workspaces_LanguageId",
+                table: "Workspaces",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workspaces_NativeLanguageId",
+                table: "Workspaces",
+                column: "NativeLanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workspaces_UserId_Name",
+                table: "Workspaces",
+                columns: new[] { "UserId", "Name" },
                 unique: true);
         }
 
@@ -237,16 +264,19 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CardExample");
+                name: "CardExamples");
 
             migrationBuilder.DropTable(
-                name: "CardProgress");
+                name: "CardProgresses");
 
             migrationBuilder.DropTable(
-                name: "Card");
+                name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "UserLanguage");
+                name: "Decks");
+
+            migrationBuilder.DropTable(
+                name: "Workspaces");
 
             migrationBuilder.DropTable(
                 name: "Languages");

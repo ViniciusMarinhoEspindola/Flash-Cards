@@ -1,9 +1,5 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
 
 namespace Infraestructure.Persistence
 {
@@ -11,7 +7,8 @@ namespace Infraestructure.Persistence
     {
         public DbSet<User> Users => Set<User>();
         public DbSet<Language> Languages => Set<Language>();
-        public DbSet<UserLanguage> UserLanguages => Set<UserLanguage>();
+        public DbSet<Workspace> Workspaces => Set<Workspace>();
+        public DbSet<Deck> Decks => Set<Deck>();
         public DbSet<Card> Cards => Set<Card>();
         public DbSet<CardExample> CardExamples => Set<CardExample>();
         public DbSet<CardProgress> CardProgresses => Set<CardProgress>();

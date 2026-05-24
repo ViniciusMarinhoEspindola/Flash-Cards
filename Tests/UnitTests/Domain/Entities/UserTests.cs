@@ -37,11 +37,11 @@ public class UserTests
     }
 
     [Fact]
-    public void Create_ShouldHave_EmptyUserLanguages()
+    public void Create_ShouldHave_EmptyWorkspaces()
     {
         var user = User.Create("test@example.com", "Test User", "hash");
 
-        user.UserLanguages.Should().BeEmpty();
+        user.Workspaces.Should().BeEmpty();
     }
 
     [Fact]

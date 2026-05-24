@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,8 +9,8 @@ namespace Infraestructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<CardExample> builder)
         {
             builder.HasKey(c => c.Id);
-            builder.Property(c => c.Sentence).IsRequired().HasMaxLength(256);
-            builder.Property(c => c.Translation).IsRequired().HasMaxLength(256);
+            builder.Property(c => c.Sentence).IsRequired().HasMaxLength(512);
+            builder.Property(c => c.Note).IsRequired().HasMaxLength(512);
 
             builder.HasOne(c => c.Card)
                    .WithMany(c => c.CardExamples)

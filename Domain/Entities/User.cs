@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string? RefreshToken { get; private set; }
         public DateTime? RefreshTokenExpiresAt { get; private set; }
 
-        public ICollection<UserLanguage> UserLanguages { get; private set; } = [];
+        public ICollection<Workspace> Workspaces { get; private set; } = [];
 
         protected User() { }
 

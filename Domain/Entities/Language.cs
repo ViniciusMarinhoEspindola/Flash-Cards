@@ -11,7 +11,6 @@ namespace Domain.Entities
         public string Code { get; private set; } = string.Empty;
         public string? FlagEmoji { get; private set; }
 
-        public ICollection<UserLanguage> UserLanguages { get; private set; } = [];
 
         protected Language() { }
 

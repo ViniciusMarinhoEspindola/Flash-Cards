@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,11 +14,6 @@ namespace Infraestructure.Persistence.Configurations
             builder.Property(l => l.FlagEmoji).HasMaxLength(10);
 
             builder.HasIndex(l => l.Code).IsUnique();
-
-            builder.HasMany(l => l.UserLanguages)
-                   .WithOne(ul => ul.Language)
-                   .HasForeignKey(ul => ul.LanguageId)
-                   .OnDelete(DeleteBehavior.Cascade);
 
             // Seed data for languages
             builder.HasData(
