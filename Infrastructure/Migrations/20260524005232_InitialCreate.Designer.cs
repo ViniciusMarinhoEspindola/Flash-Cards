@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20260508034714_InitialCreate")]
+    [Migration("20260524005232_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -29,6 +29,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("DeckId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Definition")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsPhrase")
                         .HasColumnType("INTEGER");
 
@@ -44,22 +52,14 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Translation")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserLanguageId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserLanguageId");
+                    b.HasIndex("DeckId");
 
-                    b.ToTable("Card");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Domain.Entities.CardExample", b =>
@@ -74,14 +74,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Sentence")
+                    b.Property<string>("Note")
                         .IsRequired()
-                        .HasMaxLength(256)
+                        .HasMaxLength(512)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Translation")
+                    b.Property<string>("Sentence")
                         .IsRequired()
-                        .HasMaxLength(256)
+                        .HasMaxLength(512)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -91,7 +91,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("CardExample");
+                    b.ToTable("CardExamples");
                 });
 
             modelBuilder.Entity("Domain.Entities.CardProgress", b =>
@@ -139,7 +139,34 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId", "NextReview");
 
-                    b.ToTable("CardProgress");
+                    b.ToTable("CardProgresses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Deck", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("Decks");
                 });
 
             modelBuilder.Entity("Domain.Entities.Language", b =>
@@ -308,7 +335,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserLanguage", b =>
+            modelBuilder.Entity("Domain.Entities.Workspace", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -317,10 +344,15 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LanguageId")
+                    b.Property<Guid?>("LanguageId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("NativeLanguageId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("NativeLanguageId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -335,21 +367,21 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("NativeLanguageId");
 
-                    b.HasIndex("UserId", "LanguageId")
+                    b.HasIndex("UserId", "Name")
                         .IsUnique();
 
-                    b.ToTable("UserLanguage");
+                    b.ToTable("Workspaces");
                 });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
                 {
-                    b.HasOne("Domain.Entities.UserLanguage", "UserLanguage")
+                    b.HasOne("Domain.Entities.Deck", "Deck")
                         .WithMany("Cards")
-                        .HasForeignKey("UserLanguageId")
+                        .HasForeignKey("DeckId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UserLanguage");
+                    b.Navigation("Deck");
                 });
 
             modelBuilder.Entity("Domain.Entities.CardExample", b =>
@@ -382,22 +414,31 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserLanguage", b =>
+            modelBuilder.Entity("Domain.Entities.Deck", b =>
+                {
+                    b.HasOne("Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Decks")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Workspace", b =>
                 {
                     b.HasOne("Domain.Entities.Language", "Language")
-                        .WithMany("UserLanguages")
+                        .WithMany()
                         .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Entities.Language", "NativeLanguage")
                         .WithMany()
                         .HasForeignKey("NativeLanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("UserLanguages")
+                        .WithMany("Workspaces")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -416,19 +457,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("Progress");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Language", b =>
+            modelBuilder.Entity("Domain.Entities.Deck", b =>
                 {
-                    b.Navigation("UserLanguages");
+                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("UserLanguages");
+                    b.Navigation("Workspaces");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserLanguage", b =>
+            modelBuilder.Entity("Domain.Entities.Workspace", b =>
                 {
-                    b.Navigation("Cards");
+                    b.Navigation("Decks");
                 });
 #pragma warning restore 612, 618
         }
