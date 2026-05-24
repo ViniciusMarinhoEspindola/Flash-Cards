@@ -16,7 +16,7 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+            services.AddValidatorsFromAssembly(typeof(RegisterRequestValidator).Assembly);
 
             services.AddScoped<AuthService>();
             services.AddScoped<UserService>();
