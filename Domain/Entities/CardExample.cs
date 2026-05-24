@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Domain.Entities.Generics;
 
 namespace Domain.Entities
 {
-    public class CardExample
+    public class CardExample : BaseEntity
     {
-        public Guid Id { get; private set; }
+        public Guid CardId { get; private set; }
+        public string Sentence { get; private set; } = string.Empty;
+        public string Note { get; private set; } = string.Empty;
 
-        public static CardExample Create()
+        public Card Card { get; private set; } = null!;
+
+        protected CardExample() { }
+
+        public static CardExample Create(Guid cardId, string sentence, string note)
         {
             return new CardExample
             {
-                Id = Guid.NewGuid()
+                CardId = cardId,
+                Sentence = sentence.Trim(),
+                Note = note.Trim()
             };
         }
     }
