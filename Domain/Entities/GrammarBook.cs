@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Domain.Entities.Generics;
 
 namespace Domain.Entities
 {
-    public class GrammarBook
+    // Fase 4 stub
+    public class GrammarBook : BaseEntity
     {
-        public Guid Id { get; private set; }
+        public Guid WorkspaceId { get; private set; }
 
-        public static GrammarBook Create()
+        protected GrammarBook() { }
+
+        public static GrammarBook Create(Guid workspaceId)
         {
-            return new GrammarBook
-            {
-                Id = Guid.NewGuid()
-            };
+            return new GrammarBook { WorkspaceId = workspaceId };
         }
     }
 }
