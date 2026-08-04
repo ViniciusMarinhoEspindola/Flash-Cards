@@ -27,6 +27,8 @@ namespace Infraestructure.DependencyInjection
             services.AddScoped<ICard, CardRepository>();
             services.AddScoped<ICardExample, CardExampleRepository>();
             services.AddScoped<ICardProgress, CardProgressRepository>();
+            services.AddScoped<IStudySession, StudySessionRepository>();
+            services.AddScoped<IStudySessionAnswer, StudySessionAnswerRepository>();
             services.AddScoped<IGrammarBook, GrammarBookRepository>();
             services.AddScoped<IGrammarChapter, GrammarChapterRepository>();
             services.AddScoped<IGrammarSection, GrammarSectionRepository>();

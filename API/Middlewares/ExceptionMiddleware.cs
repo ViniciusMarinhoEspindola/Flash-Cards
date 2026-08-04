@@ -19,7 +19,7 @@
                 await context.Response.WriteAsJsonAsync(new
                 {
                     error = "Ocorreu um erro interno. Tente novamente mais tarde."
-                });
+                }, context.RequestAborted);
             }
         }
     }

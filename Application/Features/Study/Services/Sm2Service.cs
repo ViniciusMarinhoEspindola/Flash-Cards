@@ -2,6 +2,8 @@ namespace Application.Features.Study.Services
 {
     public static class Sm2Service
     {
+        public static bool IsCorrect(int rating) => Math.Clamp(rating, 0, 5) >= 3;
+
         public static (int Level, double Easiness, int Interval, int Repetitions, DateTime NextReview)
             Calculate(int currentLevel, double easiness, int interval, int repetitions, int rating)
         {

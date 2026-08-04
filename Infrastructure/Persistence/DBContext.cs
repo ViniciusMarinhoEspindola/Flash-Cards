@@ -12,6 +12,8 @@ namespace Infraestructure.Persistence
         public DbSet<Card> Cards => Set<Card>();
         public DbSet<CardExample> CardExamples => Set<CardExample>();
         public DbSet<CardProgress> CardProgresses => Set<CardProgress>();
+        public DbSet<StudySession> StudySessions => Set<StudySession>();
+        public DbSet<StudySessionAnswer> StudySessionAnswers => Set<StudySessionAnswer>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -21,10 +21,24 @@ namespace API.Controllers
             return result.ToActionResult(this);
         }
 
+        [HttpPost("session/start")]
+        public async Task<IActionResult> StartSession(CancellationToken ct)
+        {
+            var result = await _studyService.StartSessionAsync(CurrentUserId, ct);
+            return result.ToActionResult(this);
+        }
+
         [HttpPost("answer")]
         public async Task<IActionResult> SubmitAnswer([FromBody] ReviewAnswerRequest request, CancellationToken ct)
         {
             var result = await _studyService.SubmitAnswerAsync(CurrentUserId, request, ct);
+            return result.ToActionResult(this);
+        }
+
+        [HttpPost("session/{id:guid}/end")]
+        public async Task<IActionResult> EndSession(Guid id, CancellationToken ct)
+        {
+            var result = await _studyService.EndSessionAsync(CurrentUserId, id, ct);
             return result.ToActionResult(this);
         }
     }
